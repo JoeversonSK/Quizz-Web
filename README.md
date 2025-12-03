@@ -41,7 +41,7 @@ Certifique-se de ter instalado:
 ### 1. Clonar o repositório
 
 ```bash
-git clone [https://github.com/SEU-USUARIO/NOME-DO-REPOSITORIO.git](https://github.com/SEU-USUARIO/NOME-DO-REPOSITORIO.git)
+git clone https://github.com/JoeversonSK/Quizz-Web.git
 cd quiz-web
 2. Configurar o Ambiente
 Faça uma cópia do arquivo de exemplo .env:
