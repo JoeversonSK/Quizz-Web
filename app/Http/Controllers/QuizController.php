@@ -12,11 +12,18 @@ class QuizController extends Controller
     // Iniciar Quiz: Retorna 10 perguntas aleatórias com suas opções
     public function start()
     {
-        // Pega 10 questões aleatórias e carrega as opções
+        // 1. Pega 10 questões aleatórias e suas opções
         $questions = Question::with('options')->inRandomOrder()->take(10)->get();
 
-        // Limpa o campo 'is_correct' para o usuário não ver a resposta no JSON
+        // 2. Para cada questão encontrada...
         $questions->each(function ($q) {
+            // ...embaralha a ordem das opções dessa questão
+            $shuffledOptions = $q->options->shuffle();
+            
+            // Atualiza a lista de opções da questão com a lista misturada
+            $q->setRelation('options', $shuffledOptions);
+
+            // Esconde qual é a correta (segurança)
             $q->options->makeHidden('is_correct');
         });
 
@@ -42,7 +49,7 @@ class QuizController extends Controller
             
             if ($selectedOption && $selectedOption->is_correct) {
                 $correct++;
-                $score += 10; // 10 pontos por acerto
+                $score += 10; // Cada resposta correta vale 10 pontos
             } else {
                 $wrong++;
             }
@@ -69,7 +76,7 @@ class QuizController extends Controller
         $ranking = QuizAttempt::with('user:id,name') // Traz apenas o nome do usuário
             ->orderByDesc('score')
             ->orderBy('total_time')
-            ->take(10)
+            ->take(5)
             ->get();
 
         return response()->json($ranking);
